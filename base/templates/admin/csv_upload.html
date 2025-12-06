@@ -1,0 +1,21 @@
+{% extends "admin/base_site.html" %}
+{% block title %}Upload Users from CSV{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <p>
+            Please upload a CSV file with the following columns:
+            <br><strong>Required:</strong> username, first_name, last_name
+            <br><strong>Optional:</strong> email
+            <br><br>
+            The user's default password will be set to <strong>vote-{LASTNAME}</strong> (with the last name in CAPITAL letters).
+        </p>
+        {{ form.as_p }}
+    </div>
+    <div>
+        <input type="submit" value="Upload and Create Users">
+    </div>
+</form>
+{% endblock %}

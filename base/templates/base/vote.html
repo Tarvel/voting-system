@@ -1,0 +1,333 @@
+{% extends 'layout.html' %}
+
+{% block title %}Cast Your Vote - VoteSecure{% endblock %}
+{% block meta_description %}Cast your vote - VoteSecure{% endblock %}
+
+{% block extra_styles %}
+.vote-header {
+text-align: center;
+margin-bottom: 3rem;
+padding: 2rem 0;
+background: var(--bg-white);
+}
+
+.logo-box {
+width: 60px;
+height: 60px;
+background: var(--primary);
+border-radius: 12px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+font-size: 1.5rem;
+font-weight: 800;
+color: white;
+margin-bottom: 1rem;
+}
+
+.vote-header h1 {
+color: var(--text-primary);
+margin-bottom: 0.5rem;
+}
+
+.subtitle {
+color: var(--text-secondary);
+font-size: 1.0625rem;
+}
+
+.progress-container {
+background: var(--bg-gray);
+border-radius: 100px;
+height: 10px;
+margin-bottom: 3rem;
+overflow: hidden;
+border: 1px solid var(--border-light);
+}
+
+.progress-bar {
+height: 100%;
+background: var(--primary);
+transition: width 0.6s ease;
+border-radius: 100px;
+}
+
+.position-card {
+background: var(--bg-white);
+border-radius: 12px;
+padding: 2.5rem;
+margin-bottom: 2rem;
+border: 1px solid var(--border-light);
+box-shadow: var(--shadow-sm);
+}
+
+.position-header {
+display: flex;
+align-items: center;
+gap: 1rem;
+margin-bottom: 2rem;
+padding-bottom: 1.5rem;
+border-bottom: 1px solid var(--border-light);
+}
+
+.position-number {
+width: 48px;
+height: 48px;
+background: var(--primary-light);
+color: var(--primary);
+border-radius: 10px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.375rem;
+font-weight: 700;
+flex-shrink: 0;
+}
+
+.position-info h2 {
+font-size: 1.625rem;
+margin-bottom: 0.25rem;
+}
+
+.position-description {
+color: var(--text-secondary);
+font-size: 0.9375rem;
+}
+
+.candidates-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+gap: 1.25rem;
+}
+
+.candidate-option {
+position: relative;
+}
+
+.candidate-option input[type="radio"] {
+position: absolute;
+opacity: 0;
+width: 0;
+height: 0;
+}
+
+.candidate-label {
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 2rem 1.5rem;
+background: var(--bg-white);
+border: 2px solid var(--border-light);
+border-radius: 10px;
+cursor: pointer;
+transition: all 0.2s ease;
+text-align: center;
+}
+
+.candidate-label:hover {
+border-color: var(--primary);
+transform: translateY(-2px);
+box-shadow: var(--shadow-md);
+}
+
+.candidate-option input[type="radio"]:checked + .candidate-label {
+background: var(--primary-light);
+border-color: var(--primary);
+}
+
+.candidate-avatar {
+width: 70px;
+height: 70px;
+background: var(--primary-light);
+color: var(--primary);
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.875rem;
+font-weight: 700;
+margin-bottom: 1rem;
+transition: all 0.2s ease;
+}
+
+.candidate-option input[type="radio"]:checked + .candidate-label .candidate-avatar {
+background: var(--primary);
+color: white;
+transform: scale(1.1);
+}
+
+.candidate-name {
+font-size: 1.0625rem;
+font-weight: 600;
+margin-bottom: 0.5rem;
+color: var(--text-primary);
+}
+
+.candidate-info {
+color: var(--text-secondary);
+font-size: 0.875rem;
+}
+
+.check-indicator {
+position: absolute;
+top: 0.75rem;
+right: 0.75rem;
+width: 24px;
+height: 24px;
+background: var(--primary);
+border-radius: 50%;
+opacity: 0;
+transform: scale(0);
+transition: all 0.2s ease;
+}
+
+.candidate-option input[type="radio"]:checked + .candidate-label .check-indicator {
+opacity: 1;
+transform: scale(1);
+}
+
+.submit-container {
+margin-top: 3rem;
+text-align: center;
+}
+
+.logout-link {
+text-align: center;
+margin-top: 2rem;
+}
+
+.logout-link a {
+color: var(--text-secondary);
+text-decoration: none;
+}
+
+@media (max-width: 768px) {
+.position-card {
+padding: 1.75rem;
+}
+
+.candidates-grid {
+grid-template-columns: 1fr;
+}
+}
+{% endblock %}
+
+{% block content %}
+<div class="vote-header fade-in-down">
+    <div class="logo-box">VS</div>
+    <h1>Cast Your Vote</h1>
+    <p class="subtitle">Select your preferred candidates for each position</p>
+</div>
+
+<div class="container">
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error">
+        <strong>Error:</strong> {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="post" class="fade-in-up" id="votingForm">
+        {% csrf_token %}
+
+        {% for position in positions %}
+        <div class="position-card">
+            <div class="position-header">
+                <div class="position-number">{{ forloop.counter }}</div>
+                <div class="position-info">
+                    <h2>{{ position.name }}</h2>
+                    <p class="position-description">{{ position.description|default:"Choose your preferred candidate" }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="candidates-grid">
+                {% for candidate in position.candidates.all %}
+                <div class="candidate-option">
+                    <input type="radio" name="position_{{ position.id }}" value="{{ candidate.id }}"
+                        id="candidate_{{ candidate.id }}" class="vote-radio" data-position="{{ position.id }}">
+                    <label for="candidate_{{ candidate.id }}" class="candidate-label">
+                        <div class="candidate-avatar">
+                            {{ candidate.name|first|upper }}
+                        </div>
+                        <div class="candidate-name">{{ candidate.name }}</div>
+                        <div class="candidate-info">
+                            {% if candidate.party %}{{ candidate.party }}{% else %}Independent{% endif %}
+                        </div>
+                        <span class="check-indicator"></span>
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="submit-container">
+            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                Submit My Vote
+            </button>
+            <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 0.875rem;">
+                By submitting, you confirm that your choices are final
+            </p>
+        </div>
+    </form>
+
+    <div class="logout-link">
+        <a href="#">← Logout</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Progress tracking
+    const form = document.getElementById('votingForm');
+    const progressBar = document.getElementById('progressBar');
+    const radioButtons = document.querySelectorAll('.vote-radio');
+    const positions = new Set();
+
+    radioButtons.forEach(radio => {
+        positions.add(radio.dataset.position);
+    });
+
+    const totalPositions = positions.size;
+
+    function updateProgress() {
+        const selectedPositions = new Set();
+
+        radioButtons.forEach(radio => {
+            if (radio.checked) {
+                selectedPositions.add(radio.dataset.position);
+            }
+        });
+
+        const progress = (selectedPositions.size / totalPositions) * 100;
+        progressBar.style.width = progress + '%';
+    }
+
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', updateProgress);
+    });
+
+    // Form validation
+    form.addEventListener('submit', function (e) {
+        const selectedPositions = new Set();
+
+        radioButtons.forEach(radio => {
+            if (radio.checked) {
+                selectedPositions.add(radio.dataset.position);
+            }
+        });
+
+        if (selectedPositions.size < totalPositions) {
+            e.preventDefault();
+            alert('Please make a selection for all positions before submitting.');
+        }
+    });
+
+    // Initial progress update
+    updateProgress();
+</script>
+{% endblock %}

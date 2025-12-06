@@ -1,0 +1,21 @@
+{% extends "admin/base_site.html" %}
+{% block title %}Upload Candidates from CSV{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <p>
+            Please upload a CSV file with the following columns:
+            <br><strong>Required:</strong> name, position
+            <br><strong>Optional:</strong> party, bio
+            <br><br>
+            <strong>Note:</strong> The position must match an existing position name exactly. Create positions first if needed.
+        </p>
+        {{ form.as_p }}
+    </div>
+    <div>
+        <input type="submit" value="Upload and Create Candidates">
+    </div>
+</form>
+{% endblock %}

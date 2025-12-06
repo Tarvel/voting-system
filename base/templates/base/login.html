@@ -1,0 +1,212 @@
+{% extends 'layout.html' %}
+
+{% block title %}Login - VoteSecure{% endblock %}
+{% block meta_description %}Login to VoteSecure - Secure voting platform{% endblock %}
+
+{% block extra_styles %}
+body {
+display: flex;
+align-items: center;
+justify-content: center;
+min-height: 100vh;
+padding: 1rem;
+background: var(--bg-gray);
+}
+
+.login-container {
+width: 100%;
+max-width: 450px;
+}
+
+.login-card {
+background: var(--bg-white);
+border-radius: 12px;
+padding: 3rem 2.5rem;
+border: 1px solid var(--border-light);
+box-shadow: var(--shadow-lg);
+}
+
+.logo-container {
+text-align: center;
+margin-bottom: 2.5rem;
+}
+
+.logo-box {
+width: 70px;
+height: 70px;
+background: var(--primary);
+border-radius: 12px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+font-size: 1.75rem;
+font-weight: 800;
+color: white;
+margin-bottom: 1rem;
+}
+
+.logo-container h1 {
+font-size: 1.875rem;
+margin-bottom: 0.5rem;
+}
+
+.subtitle {
+color: var(--text-secondary);
+margin-bottom: 0;
+font-size: 1rem;
+}
+
+.divider {
+display: flex;
+align-items: center;
+margin: 2rem 0;
+color: var(--text-secondary);
+font-size: 0.875rem;
+}
+
+.divider::before,
+.divider::after {
+content: '';
+flex: 1;
+height: 1px;
+background: var(--border-light);
+}
+
+.divider span {
+padding: 0 1rem;
+}
+
+.social-login {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 1rem;
+}
+
+.btn-social {
+padding: 0.875rem;
+background: var(--bg-white);
+border: 1.5px solid var(--border-light);
+border-radius: 6px;
+color: var(--text-primary);
+font-weight: 500;
+cursor: pointer;
+transition: all 0.2s ease;
+font-family: inherit;
+}
+
+.btn-social:hover {
+border-color: var(--primary);
+color: var(--primary);
+}
+
+.forgot-password {
+text-align: right;
+margin-top: 0.5rem;
+}
+
+.forgot-password a {
+font-size: 0.875rem;
+}
+
+.signup-link {
+text-align: center;
+margin-top: 2rem;
+padding-top: 2rem;
+border-top: 1px solid var(--border-light);
+color: var(--text-secondary);
+}
+
+.back-home {
+text-align: center;
+margin-top: 1.5rem;
+}
+
+.back-home a {
+color: var(--text-secondary);
+text-decoration: none;
+font-size: 0.875rem;
+}
+
+.back-home a:hover {
+color: var(--primary);
+}
+
+@media (max-width: 640px) {
+.login-card {
+padding: 2rem 1.5rem;
+}
+
+.social-login {
+grid-template-columns: 1fr;
+}
+}
+{% endblock %}
+
+{% block content %}
+<div class="login-container fade-in-up">
+    <div class="login-card">
+        <div class="logo-container">
+            <div class="logo-box">VS</div>
+            <h1>Welcome Back</h1>
+            <p class="subtitle">Login to cast your vote securely</p>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if form.errors %}
+        <div class="alert alert-error">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
+                style="flex-shrink: 0;">
+                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2" />
+                <path d="M10 6V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <circle cx="10" cy="13.5" r="0.75" fill="currentColor" />
+            </svg>
+            <div style="flex: 1;">
+                {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                <div>{{ error }}</div>
+                {% endfor %}
+                {% endif %}
+                {% for field in form %}
+                {% if field.errors %}
+                {% for error in field.errors %}
+                <div><strong>{{ field.label }}:</strong> {{ error }}</div>
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="username">Username or Email</label>
+                <input type="text" id="username" name="username" required autocomplete="username"
+                    placeholder="Enter your username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password"
+                    placeholder="Enter your password">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+                Login to Vote
+            </button>
+        </form>
+
+
+        <div class="back-home">
+            <a href="{% url 'index' %}">← Back to Home</a>
+        </div>
+    </div>
+    {% endblock %}

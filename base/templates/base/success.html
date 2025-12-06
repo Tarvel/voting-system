@@ -1,0 +1,313 @@
+{% extends 'layout.html' %}
+
+{% block title %}Success - VoteSecure{% endblock %}
+{% block meta_description %}Vote submitted successfully - VoteSecure{% endblock %}
+
+{% block extra_styles %}
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg-gray);
+        }
+
+        .success-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+        }
+
+        .success-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Left Column: Message & Actions */
+        .success-main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .success-icon-large {
+            width: 80px;
+            height: 80px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(22, 163, 74, 0.4);
+        }
+
+        .success-title {
+            font-size: 3rem;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .success-desc {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 450px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .features-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            border-top: 1px solid var(--border-light);
+            padding-top: 2rem;
+        }
+
+        .feature-mini {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .feature-mini-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--success);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .feature-mini-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .feature-mini-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Right Column: Summary Card */
+        .receipt-card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .receipt-header {
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .receipt-title {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .receipt-id {
+            font-family: monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .vote-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .vote-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--bg-gray);
+            border-radius: 8px;
+        }
+
+        .vote-position {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .vote-candidate {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .vote-party {
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 500;
+            background: var(--primary-light);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .receipt-footer {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .success-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+            
+            .success-main {
+                text-align: center;
+                align-items: center;
+            }
+
+            .action-buttons {
+                justify-content: center;
+            }
+
+            .features-row {
+                text-align: left;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="success-wrapper">
+    <div class="success-grid fade-in-up">
+        <!-- Left Column -->
+        <div class="success-main">
+            <div class="success-icon-large">✓</div>
+            <h1 class="success-title">Vote<br>Submitted!</h1>
+            <p class="success-desc">
+                Thank you for participating. Your vote has been securely encrypted, recorded, and anonymized.
+            </p>
+
+            <div class="action-buttons">
+                <a href="{% url 'index' %}" class="btn btn-primary btn-lg">
+                    Return Home
+                </a>
+                <a href="#" class="btn btn-secondary btn-lg">
+                    View Results
+                </a>
+            </div>
+
+            <div class="features-row">
+                <div class="feature-mini">
+                    <div class="feature-mini-icon">S</div>
+                    <div class="feature-mini-title">Encrypted</div>
+                    <div class="feature-mini-desc">End-to-end security</div>
+                </div>
+                <div class="feature-mini">
+                    <div class="feature-mini-icon">A</div>
+                    <div class="feature-mini-title">Anonymous</div>
+                    <div class="feature-mini-desc">Identity protected</div>
+                </div>
+                <div class="feature-mini">
+                    <div class="feature-mini-icon">P</div>
+                    <div class="feature-mini-title">Recorded</div>
+                    <div class="feature-mini-desc">Permanent record</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="receipt-card">
+            <div class="receipt-header">
+                <div>
+                    <div class="receipt-title">Your Votes</div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="receipt-title">Date Submitted</div>
+                    <div style="font-weight: 600;">
+                        {% if submission_date %}
+                            {{ submission_date|date:"M d, Y - g:i A" }}
+                        {% else %}
+                            Just now
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="vote-list">
+                {% if user_votes %}
+                    {% for vote in user_votes %}
+                    <div class="vote-item">
+                        <div>
+                            <div class="vote-position">{{ vote.position.name }}</div>
+                            <div class="vote-candidate">{{ vote.candidate.name }}</div>
+                        </div>
+                        {% if vote.candidate.party %}
+                        <div class="vote-party">
+                            {{ vote.candidate.party }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="text-align: center; color: var(--text-secondary);">No votes recorded.</p>
+                {% endif %}
+            </div>
+
+            <div class="receipt-footer">
+                <span>Status: <strong style="color: var(--success);">Confirmed</strong></span>
+                <span>VoteSecure System</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Display current timestamp
+    const timestamp = new Date().toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    document.getElementById('timestamp').textContent = timestamp;
+</script>
+{% endblock %}
